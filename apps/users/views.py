@@ -29,14 +29,3 @@ class ProfileViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return ProfileListSerializer
         return ProfileSerializer
-
-
-# ?????????? 401
-# {
-#   "first_name": "andrey",
-#   "last_name": "andreyich",
-#   "email": "andrey@doter.com",
-#   "phone": "+996999442211",
-#   "password": "bastard123",
-#   "password_confirmation": "bastard123"
-# }

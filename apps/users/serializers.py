@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 from apps.users.models import Profile
 
+
 User = get_user_model()
 
 
@@ -51,6 +52,20 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+
+
+class ProfileRegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        exclude = ('user',)
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        if user.profile:
+            raise serializers.ValidationError({'rejected': 'Вы уже создали профиль'})
+        validated_data['user'] = user
+        profile = super().create(validated_data)
+        return profile
 
 
 class ProfileListSerializer(ProfileSerializer):

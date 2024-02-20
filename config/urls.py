@@ -20,10 +20,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
-from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
-from apps.users.views import CustomUserViewSet, ProfileViewSet
 
 auth_patterns = [
     path('', include('rest_framework.urls')),
@@ -42,6 +40,8 @@ api_v1_patterns = [
     path('auth/', include(auth_patterns)),
     path('schema/', include(swagger_patterns)),
     path('admin/', admin.site.urls),
+
+    path('', include('apps.users.urls')),
 ]
 
 
@@ -49,10 +49,6 @@ urlpatterns = [
     path('api/v1/', include(api_v1_patterns)),
 ]
 
-router = routers.DefaultRouter()
-router.register(r'api/v1/account/user', CustomUserViewSet)
-router.register(r'api/v1/account/profile', ProfileViewSet)
-urlpatterns += router.urls
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

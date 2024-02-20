@@ -1,0 +1,91 @@
+// Family-Tree v.4
+
+
+Table Profile {
+  id int
+
+  user int [ref: - User.id]
+
+  mother_id int [ref: < User.id]
+  father_id int [ref: < User.id]
+
+  gender choice
+  patronymic char
+  birthdate date
+  age int [note: 'auto: today - birthdate']
+
+  birthplace char
+  city char
+  country char
+
+  marriage bool
+  partner_id int [ref: - User.id]
+
+  about_me text
+  education char
+  work char
+  images img
+  alive bool
+  updated_at datetime
+}
+
+
+
+Table User {    // CustomUser(AbstractUser)
+  id int
+
+  first_name char
+  last_name char
+
+  email email
+  phone phonenumber
+  avatar img
+}
+
+
+
+// Таблица "Семья" содержит информацию о семейных отношениях и связях между пользователями.
+Table Family {
+  id int                                      // Уникальный идентификатор семьи
+  description richtext                        // Описание семьи
+  images img                                  // Изображения семьи
+  parents_id int [ref: <> User.id]            // Ссылки на профили родителей
+  children_id int [ref: <> User.id]           // Ссылки на профили детей
+  tree_id int [ref: - FamilyTree.id]          // Ссылка на дерево семьи
+  created_at datetime                         // Дата создания
+  updated_at datetime                         // Дата последнего обновления
+}
+
+// Таблица "Семейное дерево" содержит информацию о семейных деревьях и их ветвях.
+Table FamilyTree {
+  id int                                      // Уникальный идентификатор семейного дерева
+  description richtext                        // Описание дерева
+  images img                                  // Изображения дерева
+  address char                                // Адрес дерева
+  branches_id int [ref: <> Branch.id]         // Ссылки на ветви дерева
+  created_at datetime                         // Дата создания
+  updated_at datetime                         // Дата последнего обновления
+}
+
+// Таблица "Ветвь" содержит информацию о каждой ветви в семейном дереве.
+Table Branch {
+  id int                                      // Уникальный идентификатор ветви
+  user_id int [ref: - User.id]                // Ссылка на профиль пользователя
+  role choice                                 // Роль в ветви
+  created_at datetime                         // Дата создания
+}
+
+// Таблица "Посаженное дерево" содержит информацию о каждом дереве, посаженном в семейном дереве.
+Table PlantedTree {
+  id int                                      // Уникальный идентификатор посаженного дерева
+  branch_id int [ref: - Branch.id]            // Ссылка на ветвь дерева
+  images img                                  // Изображения посаженного дерева
+  created_at datetime                         // Дата создания
+}
+
+// Таблица "Семейный сад" содержит информацию о всех семейных деревьях.
+Table FamilyGarden {
+  id int                                      // Уникальный идентификатор семейного сада
+  trees_id int [ref: <> FamilyTree.id]        // Ссылки на семейные деревья
+  updated_at datetime                         // Дата последнего обновления
+}

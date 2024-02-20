@@ -34,7 +34,7 @@ ALLOWED_HOSTS = env_config('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
-MY_APPS = []
+MY_APPS = ['apps.users',]
 
 THIRD_PARTY_APPS = [
     'corsheaders',
@@ -64,7 +64,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 ROOT_URLCONF = 'config.urls'
 
@@ -170,7 +170,8 @@ REST_FRAMEWORK = {
 
 # JWT
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    # "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=15),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=15),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,

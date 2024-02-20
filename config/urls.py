@@ -22,6 +22,8 @@ from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
+from apps.users.views import CustomUserViewSet, ProfileViewSet
+
 auth_patterns = [
     path('', include('rest_framework.urls')),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -35,16 +37,25 @@ swagger_patterns = [
     path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
+# users_patterns = [
+#     path('', CustomUserViewSet.as_view()),
+#     path('profile', ProfileViewSet.as_view())
+# ]
+
 api_v1_patterns = [
     path('auth/', include(auth_patterns)),
     path('schema/', include(swagger_patterns)),
     path('admin/', admin.site.urls),
+
+    # path('account/', include(users_patterns))
 ]
 
 
 urlpatterns = [
     path('api/v1/', include(api_v1_patterns)),
-    # path('api/v1/', include())
+
+
+    path('api/v1/account/', include('apps.users.urls')),
 ]
 
 if settings.DEBUG:

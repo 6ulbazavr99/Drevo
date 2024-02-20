@@ -2,7 +2,9 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 
 from apps.users.models import Profile
-from apps.users.serializers import CustomUserRegisterSerializer, CustomUserSerializer
+from apps.users.serializers import CustomUserRegisterSerializer, CustomUserSerializer, CustomUserListSerializer, \
+    CustomUserDetailSerializer, ProfileListSerializer, ProfileSerializer
+
 
 User = get_user_model()
 
@@ -13,9 +15,28 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'create':
             return CustomUserRegisterSerializer
+        if self.action == 'list':
+            return CustomUserListSerializer
+        if self.action in ['retrieve', 'update', 'partial_update']:
+            return CustomUserDetailSerializer
         return CustomUserSerializer
 
 
-# class ProfileViewSet(viewsets.ModelViewSet):
-#     queryset = Profile.objects.all()
-#     serializer_class = ProfileSerializer
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ProfileListSerializer
+        return ProfileSerializer
+
+
+# ?????????? 401
+# {
+#   "first_name": "andrey",
+#   "last_name": "andreyich",
+#   "email": "andrey@doter.com",
+#   "phone": "+996999442211",
+#   "password": "bastard123",
+#   "password_confirmation": "bastard123"
+# }

@@ -39,10 +39,13 @@ api_v1_patterns = [
     path('auth/', include(auth_patterns)),
     path('schema/', include(swagger_patterns)),
     path('admin/', admin.site.urls),
+    path('posts/',include('apps.blog.urls'))
 ]
+
 
 urlpatterns = [
     path('api/v1/', include(api_v1_patterns)),
+    # path('api/v1/', include())
 ]
 
 if settings.DEBUG:

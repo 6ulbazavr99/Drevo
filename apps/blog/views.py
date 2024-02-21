@@ -1,4 +1,3 @@
-from django.core.serializers import serialize
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -31,8 +30,6 @@ class PostViewSet(ModelViewSet):
             return [IsAuthenticated(), permissions.IsAdmin(), permissions.IsAuthor()]
         return [AllowAny()]
 
-    from rest_framework.response import Response
-
     @action(['GET'], detail=True)
     def like(self, request, pk=None, *args, **kwargs):
         post = self.get_object()
@@ -46,8 +43,6 @@ class PostViewSet(ModelViewSet):
         serializer = self.get_serializer(post)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
-
     @action(['GET'], detail=True)
     def get_liked_users(self, request, pk=None):
         post = self.get_object()
@@ -55,7 +50,6 @@ class PostViewSet(ModelViewSet):
 
         serializer = serializers.UserLikeSerializer(liked_users, many=True)
         return Response({"liked_users": serializer.data})
-
 
     @action(['POST', 'PATCH', 'DELETE', 'GET'], detail=True)
     def comments(self, request, pk=None, *args, **kwargs):

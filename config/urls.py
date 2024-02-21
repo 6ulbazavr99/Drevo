@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
+
 auth_patterns = [
     path('', include('rest_framework.urls')),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -39,14 +40,15 @@ api_v1_patterns = [
     path('auth/', include(auth_patterns)),
     path('schema/', include(swagger_patterns)),
     path('admin/', admin.site.urls),
-    path('posts/',include('apps.blog.urls'))
+    path('posts/',include('apps.blog.urls')),
+    path('', include('apps.users.urls')),
 ]
 
 
 urlpatterns = [
     path('api/v1/', include(api_v1_patterns)),
-    # path('api/v1/', include())
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

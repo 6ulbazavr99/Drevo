@@ -1,38 +1,48 @@
-// Family-Tree v.3
+// Family-Tree v.4
 
-// Таблица "Профиль" содержит информацию о каждом пользователе в системе.
+
 Table Profile {
-  id int                                      // Уникальный идентификатор профиля
-  mother_id int [ref: < User.id]              // Ссылка на профиль матери
-  father_id int [ref: < User.id]              // Ссылка на профиль отца
-  first_name char                             // Имя
-  last_name char                              // Фамилия
-  patronymic char                             // Отчество
-  birthdate date                              // Дата рождения
-  gender choice                               // Пол
-  age int                                     // Возраст
-  birthplace char                             // Место рождения
-  city char                                   // Город проживания
-  country char                                // Страна проживания
-  marriage bool                               // Семейное положение (в браке или нет)
-  partner_id int [ref: - User.id]             // Ссылка на профиль супруга/супруги
-  about_me richtext                           // Информация о себе
-  education char                              // Образование
-  work char                                   // Место работы
-  images image                                // Фотографии
-  alive bool                                  // Жив или нет
-  updated_at datetime                         // Дата последнего обновления
+  id int
+
+  user int [ref: - User.id]
+
+  mother_id int [ref: < User.id]
+  father_id int [ref: < User.id]
+
+  gender choice
+  patronymic char
+  birthdate date
+  age int [note: 'auto: today - birthdate']
+
+  birthplace char
+  city char
+  country char
+
+  marriage bool
+  partner_id int [ref: - User.id]
+
+  about_me text
+  education char
+  work char
+  images img
+  alive bool
+  updated_at datetime
 }
 
-// Таблица "Пользователь" содержит основную информацию о пользователе.
-Table User {
-  id int                                      // Уникальный идентификатор пользователя
-  username char                               // Имя пользователя
-  email email                                 // Электронная почта
-  phone phonenumber                           // Номер телефона
-  avatar img                                  // Аватар пользователя
-  profile_id int [ref: - Profile.id]          // Ссылка на профиль пользователя
+
+
+Table User {    // CustomUser(AbstractUser)
+  id int
+
+  first_name char
+  last_name char
+
+  email email
+  phone phonenumber
+  avatar img
 }
+
+
 
 // Таблица "Семья" содержит информацию о семейных отношениях и связях между пользователями.
 Table Family {

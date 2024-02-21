@@ -8,8 +8,8 @@ import datetime
 
 
 class CustomUser(AbstractUser):
-    first_name = models.CharField(max_length=255, blank=True, null=True)
-    last_name = models.CharField(max_length=255, blank=True, null=True)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
 
     email = models.EmailField(unique=True)
     phone = PhoneNumberField(blank=True, null=True, unique=True)
@@ -21,9 +21,7 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        if self.first_name and self.last_name:
-            return f'{self.first_name} {self.last_name}'
-        return self.email
+        return f'{self.first_name} {self.last_name}'
 
 
 class Profile(models.Model):

@@ -42,6 +42,7 @@ api_v1_patterns = [
     path('admin/', admin.site.urls),
 
     path('', include('apps.users.urls')),
+    path('', include('apps.family.urls')),
 ]
 
 

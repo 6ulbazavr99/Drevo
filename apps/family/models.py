@@ -21,7 +21,7 @@ class Family(MPTTModel):
         null=True,
         blank=True,
         related_name='subfamilies',
-        verbose_name=_("Родитель")
+        verbose_name=_("Семейная связь")
     )
 
     name = models.CharField(max_length=255, verbose_name=_("Имя"))

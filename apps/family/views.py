@@ -3,7 +3,10 @@ from rest_framework import viewsets
 
 from apps.family.models import Family, FamilyImage, FamilyMember
 from apps.family.serializers import FamilySerializer, FamilyImageSerializer, FamilyMemberSerializer, \
-    FamilyDetailSerializer, FamilyListSerializer, FamilyRegisterSerializer
+    FamilyDetailSerializer, FamilyListSerializer, FamilyRegisterSerializer, RecursiveFamilySerializer
+
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 
 User = get_user_model()
@@ -24,9 +27,7 @@ class FamilyViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         family = serializer.save()
-        print(serializer)
         members = self.request.data.get('members', [])
-        print(members)
         for member in members:
             user = User.objects.get(pk=member['user'])
             FamilyMember.objects.create(
@@ -34,6 +35,12 @@ class FamilyViewSet(viewsets.ModelViewSet):
                 user=user,
                 role=member['role']
             )
+
+    @action(detail=True, methods=['get'])
+    def tree(self, request, pk=None):
+        family = self.get_object()
+        serializer = RecursiveFamilySerializer(family)
+        return Response(serializer.data)
 
 
 class FamilyMemberViewSet(viewsets.ModelViewSet):

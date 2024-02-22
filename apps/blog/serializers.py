@@ -50,7 +50,6 @@ class PostCreateUpdateSerializer(serializers.ModelSerializer):
         post = Post.objects.create(**validated_data)
         for image in images:
             PostImage.objects.create(image=image, post=post)
-
         return post
 
 

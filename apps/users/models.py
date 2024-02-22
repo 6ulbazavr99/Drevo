@@ -21,11 +21,6 @@ class CustomUser(AbstractUser):
         ('female', 'Женский')
     ]
 
-    mother = models.ForeignKey('CustomUser', on_delete=models.SET_NULL, null=True,
-                               related_name='children_as_mother', blank=True)
-    father = models.ForeignKey('CustomUser', on_delete=models.SET_NULL, null=True,
-                               related_name='children_as_father', blank=True)
-
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True, null=True)
     patronymic = models.CharField(max_length=255, blank=True, null=True)
     birthdate = models.DateField(blank=True, null=True)

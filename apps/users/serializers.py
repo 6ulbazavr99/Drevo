@@ -21,7 +21,11 @@ class CustomUserListSerializer(CustomUserSerializer):
 class CustomUserDetailSerializer(CustomUserSerializer):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'phone', 'avatar')
+        fields = (
+            'first_name', 'last_name', 'email', 'phone', 'avatar', 'patronymic',
+            'username', 'gender', 'birthdate', 'age', 'birthplace', 'city', 'country',
+            'marriage', 'partner', 'about_me', 'education', 'work', 'images', 'alive'
+        )
 
 
 class CustomUserRegisterSerializer(CustomUserSerializer):

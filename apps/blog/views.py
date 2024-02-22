@@ -88,6 +88,3 @@ class PostViewSet(ModelViewSet):
             comments = Comment.objects.filter(post=post)
             serializer = serializers.CommentListSerializer(comments, many=True)
             return Response({"comments": serializer.data})
-
-            
-

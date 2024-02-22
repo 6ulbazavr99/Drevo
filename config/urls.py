@@ -41,8 +41,8 @@ api_v1_patterns = [
     path('schema/', include(swagger_patterns)),
     path('admin/', admin.site.urls),
     path('posts/', include('apps.blog.urls')),
-    path('', include('apps.users.urls')),
-    path('', include('apps.family.urls')),
+    # path('', include('apps.users.urls')),
+    # path('', include('apps.family.urls')),
 ]
 
 

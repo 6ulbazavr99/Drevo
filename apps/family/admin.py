@@ -1,10 +1,7 @@
 from django.contrib import admin
+from mptt.admin import MPTTModelAdmin
 
-from apps.family.models import Family, FamilyTree, FamilyGarden, Branch, PlantedTree
+from apps.family.models import Family, FamilyMember
 
-
-admin.site.register(Family)
-admin.site.register(FamilyTree)
-admin.site.register(FamilyGarden)
-admin.site.register(Branch)
-admin.site.register(PlantedTree)
+admin.site.register(Family, MPTTModelAdmin)
+admin.site.register(FamilyMember)

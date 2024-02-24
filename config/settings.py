@@ -37,7 +37,7 @@ ALLOWED_HOSTS = env_config('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
-MY_APPS = ['apps.users', 'apps.family', 'apps.blog']
+MY_APPS = ['apps.users', 'apps.family', 'apps.blog', 'apps.plant']
 
 
 THIRD_PARTY_APPS = [
@@ -48,6 +48,7 @@ THIRD_PARTY_APPS = [
     'drf_spectacular',
     'django_rest_passwordreset',
     'mptt',
+    'multiselectfield',
 ]
 
 

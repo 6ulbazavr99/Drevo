@@ -1,4 +1,4 @@
-// Family-Tree v.6
+// Family-Tree v.7
 
 Table User {  // Пользователь (CustomUser на основе AbstractUser)
   id int  // Идентификатор пользователя
@@ -79,4 +79,18 @@ Table Comment {  // Комментарий
   post int [ref: - Post.id]  // Пост
   body text  // Текст комментария
   created_at datetime  // Дата создания
+}
+
+Table PlantedTree {  // Посаженного дерево
+  id int  // Идентификатор посаженного дерева
+  user int [ref: > User.id]  // Идентификатор пользователя (внешний ключ)
+
+  condition char  // Состояние посаженного дерева
+  type char  // Вид дерева
+  age int  // Возраст дерева
+  preview char  // Превью посаженного дерева (ссылка на изображение)
+  address char  // Адрес посадки дерева
+
+  created_at datetime  // Дата создания
+  updated_at datetime  // Дата обновления
 }

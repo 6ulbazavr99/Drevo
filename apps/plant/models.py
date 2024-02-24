@@ -41,7 +41,7 @@ class PlantedTree(models.Model):
 
     def __str__(self):
         if self.user:
-            return f'{self.user} {self.user.role} {self.user.family}'
+            return f'{self.user}'
         return f'Посаженное дерево №{self.id}'
 
     class Meta:

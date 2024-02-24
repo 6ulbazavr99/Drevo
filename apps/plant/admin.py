@@ -4,8 +4,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class PlantedTreeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'condition_display', 'type', 'age', 'preview_display', 'address', 'updated_at',
-                    'created_at')
+    list_display = ('user', 'condition_display', 'type', 'age', 'preview_display', 'address', 'updated_at',
+                    'created_at', 'id')
     list_filter = ('condition', 'type', 'updated_at', 'created_at')
     search_fields = ('user__username', 'type', 'address')
     readonly_fields = ('updated_at', 'created_at')

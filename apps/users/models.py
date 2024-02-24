@@ -12,6 +12,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(_('Электронная почта'), unique=True)
     phone = PhoneNumberField(_('Телефон'), blank=True, null=True, unique=True)
     avatar = models.ImageField(_('Аватар'), upload_to='avatars/', blank=True, null=True)
+    is_online = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

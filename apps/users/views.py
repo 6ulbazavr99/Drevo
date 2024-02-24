@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
 from apps.users.serializers import CustomUserRegisterSerializer, CustomUserListSerializer, CustomUserDetailSerializer, \
     CustomUserSerializer
@@ -31,3 +33,17 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         elif self.action == 'create':
             return [AllowAny()]
         return [IsAuthenticated()]
+
+    @action(detail=True, methods=['post'])
+    def set_online(self, request, pk=None):
+        user = self.get_object()
+        user.is_online = True
+        user.save()
+        return Response({'status': 'Пользователь сейчас в сети'})
+
+    @action(detail=True, methods=['post'])
+    def set_offline(self, request, pk=None):
+        user = self.get_object()
+        user.is_online = False
+        user.save()
+        return Response({'status': 'Пользователь сейчас не в сети'})

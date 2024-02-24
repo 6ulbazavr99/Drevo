@@ -1,8 +1,13 @@
+from django.contrib.auth import get_user_model
+
 from apps.family.models import FamilyMember
 from django.db import models
 from multiselectfield import MultiSelectField
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+
+
+User = get_user_model()
 
 
 def validate_max_choices(value):
@@ -12,7 +17,7 @@ def validate_max_choices(value):
 
 
 class PlantedTree(models.Model):
-    user = models.ForeignKey(FamilyMember, on_delete=models.CASCADE, blank=True, null=True, related_name='planted_tree',
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='planted_tree',
                              verbose_name=_("Пользователь"))
 
     CONDITION_CHOICES = [

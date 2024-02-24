@@ -52,8 +52,10 @@ class FamilyMember(models.Model):
         ('grandfather', 'Дедушка'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("Пользователь"))
-    family = models.ForeignKey(Family, on_delete=models.CASCADE, verbose_name=_("Семья"))
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("Пользователь"),
+                             related_name='family_members')
+    family = models.ForeignKey(Family, on_delete=models.CASCADE, verbose_name=_("Семья"),
+                               related_name='family_members')
     role = models.CharField(max_length=100, choices=ROLE_CHOICES, verbose_name=_("Роль"))
 
     def __str__(self):

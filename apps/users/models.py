@@ -40,7 +40,6 @@ class CustomUser(AbstractUser):
     about_me = models.TextField(_('О себе'), blank=True, null=True)
     education = models.CharField(_('Образование'), max_length=255, blank=True, null=True)
     work = models.CharField(_('Работа'), max_length=255, blank=True, null=True)
-    images = models.ImageField(_('Изображения'), upload_to='images/', blank=True, null=True)
     alive = models.BooleanField(_('Жив'), default=True, blank=True, null=True)
     updated_at = models.DateTimeField(_('Обновлено'), auto_now=True)
 

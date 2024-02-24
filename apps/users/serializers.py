@@ -24,7 +24,7 @@ class CustomUserDetailSerializer(CustomUserSerializer):
         fields = (
             'first_name', 'last_name', 'email', 'phone', 'avatar', 'patronymic',
             'username', 'gender', 'birthdate', 'age', 'birthplace', 'city', 'country',
-            'marriage', 'partner', 'about_me', 'education', 'work', 'images', 'alive'
+            'marriage', 'partner', 'about_me', 'education', 'work', 'alive'
         )
 
 

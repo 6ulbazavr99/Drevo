@@ -8,10 +8,12 @@ User = get_user_model()
 
 
 class Post(models.Model):
+    user = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
+
     title = models.CharField(max_length=255)
     body = models.TextField(max_length=5000, blank=True)
-    user = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     preview = models.ImageField(upload_to='images/', null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -25,9 +27,10 @@ class Post(models.Model):
 
 
 class PostImage(models.Model):
+    post = models.ForeignKey(Post, related_name='images', on_delete=models.CASCADE)
+
     title = models.CharField(max_length=100, blank=True)
     image = models.ImageField(upload_to='images/')
-    post = models.ForeignKey(Post, related_name='images', on_delete=models.CASCADE)
 
     @staticmethod
     def generate_name():
@@ -49,8 +52,9 @@ class Like(models.Model):
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
+
     body = models.TextField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True)
 

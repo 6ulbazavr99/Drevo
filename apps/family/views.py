@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets, permissions
 
 from apps.family.models import Family, FamilyImage, FamilyMember
+from apps.family.permissions import IsFamilyMember, IsFamilyParentMember
 from apps.family.serializers import FamilySerializer, FamilyImageSerializer, FamilyMemberSerializer, \
     FamilyDetailSerializer, FamilyListSerializer, FamilyRegisterSerializer, RecursiveFamilySerializer
 
@@ -25,6 +26,13 @@ class FamilyViewSet(viewsets.ModelViewSet):
         elif self.action in ['retrieve', 'update', 'partial_update']:
             return FamilyDetailSerializer
         return FamilySerializer
+
+    def get_permissions(self):
+        if self.action in ('my_tree', 'family_tree', 'father_tree', 'mother_tree'):
+            return [IsFamilyMember()]
+        elif self.action in ('destroy', 'update', 'partial_update'):
+            return [IsFamilyParentMember()]
+        return super(FamilyViewSet, self).get_permissions()
 
     def perform_create(self, serializer):
         family = serializer.save()
@@ -66,7 +74,7 @@ class FamilyViewSet(viewsets.ModelViewSet):
         return Response(father_trees)
 
     @action(detail=True, methods=['get'])
-    def mother_tree(self, request):
+    def mother_tree(self, request, pk=None):
         family = self.get_object()
         mother_members = family.members.filter(familymember__role='mother')
         mother_trees = []

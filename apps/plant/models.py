@@ -34,5 +34,7 @@ class PlantedTree(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Обновлено"))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Создано"))
 
-    # def __str__(self):
-    #     return f'{self.user} {self.user.role} {self.user.family}'
+    def __str__(self):
+        if self.user:
+            return f'{self.user} {self.user.role} {self.user.family}'
+        return f'PlantedTree #{self.id}'

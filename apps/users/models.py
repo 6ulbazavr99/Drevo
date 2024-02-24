@@ -42,9 +42,12 @@ class CustomUser(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name} {self.patronymic} [{self.email}]'
+        return f'{self.first_name} {self.last_name} [{self.email}]'
 
     def save(self, *args, **kwargs):
         if not self.username:
             self.username = self.email.split('@')[0] + str(CustomUser.objects.count())
         super().save(*args, **kwargs)
+
+
+# TODO: FIX THE PASSWORD WHEN CREATING A REGULAR USER IN THE ADMIN PANEL !!!

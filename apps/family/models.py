@@ -43,9 +43,18 @@ class Family(MPTTModel):
 
 
 class FamilyMember(models.Model):
+    ROLE_CHOICES = [
+        ('son', 'Сын'),
+        ('daughter', 'Дочь'),
+        ('father', 'Отец'),
+        ('mother', 'Мать'),
+        ('grandmother', 'Бабушка'),
+        ('grandfather', 'Дедушка'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("Пользователь"))
     family = models.ForeignKey(Family, on_delete=models.CASCADE, verbose_name=_("Семья"))
-    role = models.CharField(max_length=100, verbose_name=_("Роль"))
+    role = models.CharField(max_length=100, choices=ROLE_CHOICES, verbose_name=_("Роль"))
 
     def __str__(self):
         return f"Роль {self.user} в семье {self.family}: {self.role}"

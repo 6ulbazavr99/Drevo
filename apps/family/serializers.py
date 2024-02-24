@@ -49,4 +49,4 @@ class FamilyImageSerializer(serializers.ModelSerializer):
 class RecursiveFamilySerializer(FamilySerializer):
     class Meta:
         model = Family
-        fields = ['id', 'name', 'description', 'members', 'parent', 'subfamilies']
+        fields = ('id', 'name', 'description', 'members', 'parent', 'subfamilies', )

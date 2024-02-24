@@ -1,135 +1,82 @@
-// Family-Tree v.5
+// Family-Tree v.6
 
-Table Profile {           // Профиль пользователя
-  id int                 // Идентификатор профиля пользователя
+Table User {  // Пользователь (CustomUser на основе AbstractUser)
+  id int  // Идентификатор пользователя
 
-  user int [ref: - User.id]  // Ссылка на пользователя (внешний ключ)
+  first_name char  // Имя
+  last_name char  // Фамилия
+  email email  // Email
+  phone phonenumber  // Телефонный номер
+  avatar img  // Аватар пользователя
 
-  mother int [ref: < User.id]  // Ссылка на мать (внешний ключ)
-  father int [ref: < User.id]  // Ссылка на отца (внешний ключ)
-
-  gender choice         // Пол (выбор между мужским и женским)
-  patronymic char       // Отчество
-  birthdate date        // Дата рождения
+  gender choice  // Пол (выбор между мужским и женским)
+  patronymic char  // Отчество
+  birthdate date  // Дата рождения
   age int [note: 'auto: today - birthdate']  // Возраст (автоматический расчет)
-
-  birthplace char       // Место рождения
-  city char             // Город
-  country char          // Страна
-
-  marriage bool         // Семейное положение (женат/замужем)
+  birthplace char  // Место рождения
+  city char  // Город
+  country char  // Страна
+  marriage bool  // Семейное положение (женат/замужем)
   partner int [ref: - User.id]  // Ссылка на партнера/партнершу (внешний ключ)
-
-  about_me text         // Информация о пользователе
-  education char        // Образование
-  work char             // Место работы
-  images img            // Изображения пользователя
-  alive bool            // Жив ли пользователь
-  updated_at datetime   // Дата последнего обновления профиля
+  about_me text  // Информация о пользователе
+  education char  // Образование
+  work char  // Место работы
+  images img  // Изображения пользователя
+  alive bool  // Жив ли пользователь
+  updated_at datetime  // Дата последнего обновления профиля
 }
 
-Table User {    // Пользователь (CustomUser на основе AbstractUser)
-  id int            // Идентификатор пользователя
-
-  first_name char   // Имя
-  last_name char    // Фамилия
-
-  email email       // Email
-  phone phonenumber   // Телефонный номер
-  avatar img        // Аватар пользователя
+Table Family {  // Семья (MPTTModel)
+  id int  // Идентификатор семьи
+  name char  // Название семьи
+  description text  // Описание семьи
+  preview img  // Изображение семьи
+  updated_at datetime  // Дата последнего обновления
+  created_at datetime  // Дата создания
+  parent id  // MPTT идентификатор семейной связи
+  members id [ref: <> User.id, note: 'through=FamilyMember'] // Члены семьи
 }
 
-Table Family {     // Семья
-  id int             // Идентификатор семьи
-
-  family_name char [note: 'auto']  // Название семьи (автоматический расчет)
-  description text   // Описание семьи
-  images img         // Изображения семьи
-
-  parents int [ref: <> User.id]   // Родители (внешний ключ)
-  children int [ref: <> User.id]  // Дети (внешний ключ)
-  tree int [ref: - FamilyTree.id]  // Дерево семьи (внешний ключ)
-
-  created_at datetime   // Дата создания записи
-  updated_at datetime   // Дата последнего обновления записи
+Table FamilyMember {  // Член семьи
+  id int  // Идентификатор
+  user int [ref: - User.id]  // Пользователь
+  family int [ref: - Family.id]  // Семья
+  role char  // Роль
 }
 
-Table FamilyTree {    // Семейное древо (автоматическое создание при создании семьи)
-  id int             // Идентификатор семейного дерева
-
-  description text   // Описание семейного древа
-  images img         // Изображения семейного древа
-  address char       // Адрес
-
-  created_at datetime   // Дата создания записи
-  updated_at datetime   // Дата последнего обновления записи
+Table FamilyImage {  // Изображение семьи
+  id int  // Идентификатор
+  family int [ref: - Family.id]  // Семья
+  image img  // Изображение
 }
 
-Table Branch {   // Ветвь семейного древа
-  id int             // Идентификатор ветви
-
-  user int [ref: - User.id]   // Ссылка на пользователя (внешний ключ)
-  role choice         // Роль пользователя в ветви
-
-  created_at datetime   // Дата создания записи
+Table Post {  // Пост
+  id int  // Идентификатор поста
+  title char  // Заголовок поста
+  body text  // Текст поста
+  user int [ref: - User.id]  // Пользователь
+  preview img  // Превью
+  created_at datetime  // Дата создания
+  updated_at datetime  // Дата обновления
 }
 
-Table PlantedTree {    // Посаженное дерево
-  id int             // Идентификатор посаженного дерева
-
-  branch int [ref: - Branch.id]   // Ссылка на ветвь (внешний ключ)
-  images img         // Изображения посаженного дерева
-
-  created_at datetime   // Дата создания записи
+Table PostImage {  // Изображение поста
+  id int  // Идентификатор
+  title char [note: 'auto'] // Название (автоматическое)
+  post int [ref: - Post.id]  // Пост
+  image img  // Изображение
 }
 
-Table FamilyGarden {   // Семейный сад
-  id int             // Идентификатор семейного сада
-
-  family_name char   // Название семьи
-  description text   // Описание семейного сада
-  trees int [ref: <> FamilyTree.id]  // Деревья (внешний ключ)
-
-  updated_at datetime   // Дата последнего обновления записи
+Table Like {  // Лайк
+  id int  // Идентификатор
+  user int [ref: - User.id]  // Пользователь
+  post int [ref: - Post.id]  // Пост
 }
 
-Table Post {    // Пост
-  id int             // Идентификатор поста
-
-  title char         // Заголовок поста
-  body text          // Текст поста
-  user id [ref: > User.id]   // Ссылка на пользователя (внешний ключ)
-  preview img        // Превью поста
-
-  created_at datetime   // Дата создания записи
-  updated_at datetime   // Дата последнего обновления записи
-}
-
-Table PostImage {    // Изображение поста
-  id int             // Идентификатор изображения поста
-
-  title char         // Заголовок изображения
-  image img          // Изображение
-  post id [ref: > Post.id]   // Ссылка на пост (внешний ключ)
-}
-
-Table Like {    // Лайк
-  id int             // Идентификатор лайка
-
-  user id [ref: > User.id]   // Ссылка на пользователя (внешний ключ)
-  post id [ref: > User.id]   // Ссылка на пост (внешний ключ)
-}
-
-Table Comment {    // Комментарий
-  id int             // Идентификатор комментария
-
-  user id [ref: > User.id]   // Ссылка на пользователя (внешний ключ)
-  post id [ref: > User.id]   // Ссылка на пост (внешний ключ)
-
-  body text          // Текст комментария
-  created_at datetime   // Дата создания записи
-}
-
-Table Chat {    // Чат
-  id int             // Идентификатор чата
+Table Comment {  // Комментарий
+  id int  // Идентификатор
+  user int [ref: - User.id]  // Пользователь
+  post int [ref: - Post.id]  // Пост
+  body text  // Текст комментария
+  created_at datetime  // Дата создания
 }

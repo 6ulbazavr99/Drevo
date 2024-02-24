@@ -40,7 +40,9 @@ api_v1_patterns = [
     path('auth/', include(auth_patterns)),
     path('schema/', include(swagger_patterns)),
     path('admin/', admin.site.urls),
-    # path('posts/', include('apps.blog.urls')),
+
+
+    path('posts/', include('apps.blog.urls')),
     path('', include('apps.users.urls')),
     path('', include('apps.family.urls')),
 ]

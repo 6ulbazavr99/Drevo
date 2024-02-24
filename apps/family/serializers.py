@@ -11,7 +11,6 @@ class FamilySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_subfamilies(self, obj):
-        # Рекурсивно вызывает тот же сериализатор для подсемей
         if obj.subfamilies.exists():
             return FamilySerializer(obj.subfamilies.all(), many=True).data
         return []

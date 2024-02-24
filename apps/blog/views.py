@@ -21,7 +21,7 @@ class PostViewSet(ModelViewSet):
             return serializers.PostDetailSerializer
         elif self.action == 'comments':
             return serializers.CommentCreateUpdateSerializer
-        return serializers.PostlistSerializer
+        return serializers.PostListSerializer
 
     def get_permissions(self):
         if self.action in ('create', 'like'):

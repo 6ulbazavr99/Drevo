@@ -53,7 +53,7 @@ class PostCreateUpdateSerializer(serializers.ModelSerializer):
         return post
 
 
-class PostlistSerializer(serializers.ModelSerializer):
+class PostListSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
     likes_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()

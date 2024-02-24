@@ -24,7 +24,7 @@ class PlantedTree(models.Model):
         ('bad', _('Плохо')),
     ]
     condition = MultiSelectField(choices=CONDITION_CHOICES, verbose_name=_("Состояние"), blank=True, null=True,
-                                 validators=[validate_max_choices])
+                                 validators=[validate_max_choices], default='good')
 
     type = models.CharField(max_length=255, verbose_name=_("Вид"), blank=True, null=True)
     age = models.IntegerField(_('Возраст'), blank=True, null=True)
@@ -38,6 +38,10 @@ class PlantedTree(models.Model):
         if self.user:
             return f'{self.user} {self.user.role} {self.user.family}'
         return f'Посаженное дерево №{self.id}'
+
+    class Meta:
+        verbose_name = _("Посаженное дерево")
+        verbose_name_plural = _("Посаженные деревья")
 
 
 # TODO: It is necessary to comment on the django 5x

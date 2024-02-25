@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -33,6 +33,12 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         elif self.action == 'create':
             return [AllowAny()]
         return [IsAuthenticated()]
+
+    @action(['GET'], detail=False)
+    def profile(self, request):
+        user = request.user
+        serializer = CustomUserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'])
     def set_online(self, request, pk=None):

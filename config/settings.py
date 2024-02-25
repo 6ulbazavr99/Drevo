@@ -177,9 +177,6 @@ PHONENUMBER_DEFAULT_REGION = 'KG'
 REST_FRAMEWORK = {
     'DEFAULT_DATETIME_FORMAT': '%d.%m.%Y %H:%M:%S',
     'DATE_FORMAT': '%d.%m.%Y',
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -194,7 +191,7 @@ REST_FRAMEWORK = {
 
 # JWT
 SIMPLE_JWT = {
-    # "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    # "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),   # !!!
     "ACCESS_TOKEN_LIFETIME": timedelta(days=15),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=15),
     "ROTATE_REFRESH_TOKENS": False,

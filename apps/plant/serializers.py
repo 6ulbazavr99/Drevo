@@ -12,7 +12,7 @@ class PlantedTreeSerializer(serializers.ModelSerializer):
 class PlantedTreeListSerializer(PlantedTreeSerializer):
     class Meta:
         model = PlantedTree
-        fields = ('id', 'user',)
+        fields = ('id', 'user', 'age', 'preview', )
 
 
 class PlantedTreeDetailSerializer(PlantedTreeSerializer):

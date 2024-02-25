@@ -26,11 +26,11 @@ class PlantedTreeViewSet(viewsets.ModelViewSet):
             return [IsMember()]
         elif self.action == 'my_planted_tree':
             return [IsPlant(), IsMember()]
-        return super(PlantedTreeViewSet, self).get_permissions()
+        return [super(PlantedTreeViewSet, self).get_permissions()]
 
     @action(detail=False, methods=['get'])
     def my_planted_tree(self, request):
         user = request.user
-        tree = PlantedTree.objects.filter(user=user)
-        serializer = PlantedTreeSerializer(tree)
-        return Response(tree)
+        trees = PlantedTree.objects.filter(user=user)
+        serializer = PlantedTreeSerializer(trees, many=True)
+        return Response(serializer.data)

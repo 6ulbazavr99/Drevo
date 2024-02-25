@@ -9,6 +9,8 @@ from apps.family.serializers import FamilySerializer, FamilyImageSerializer, Fam
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from apps.plant.serializers import PlantedTreeSerializer
+
 
 User = get_user_model()
 
@@ -28,7 +30,7 @@ class FamilyViewSet(viewsets.ModelViewSet):
         return FamilySerializer
 
     def get_permissions(self):
-        if self.action in ('my_tree', 'family_tree', 'father_tree', 'mother_tree'):
+        if self.action in ('my_tree', 'family_tree', 'father_tree', 'mother_tree', 'family_planted_trees'):
             return [IsFamilyMember()]
         elif self.action in ('destroy', 'update', 'partial_update'):
             return [IsFamilyParentMember()]
@@ -44,6 +46,17 @@ class FamilyViewSet(viewsets.ModelViewSet):
                 user=user,
                 role=member['role']
             )
+
+    @action(detail=True, methods=['get'])
+    def family_planted_trees(self, request, pk=None):
+        family = self.get_object()
+        members = family.members.all()
+        trees = []
+        for member in members:
+            tree = member.planted_tree
+            serialized_tree = PlantedTreeSerializer(tree).data
+            trees.append({member.first_name: serialized_tree})
+        return Response(trees)
 
     @action(detail=False, methods=['get'])
     def my_tree(self, request):

@@ -43,9 +43,11 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'drf_spectacular',
     'django_rest_passwordreset',
+    'channels',
 ]
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -225,3 +227,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 with contextlib.suppress(ImportError):
     from .local_settings import *
+
+
+
+CHANNEL_REDIS_HOST = [("localhost", 6379)]
+ASGI_APPLICATION = 'config.asgi.application'  # Замените 'myproject' на имя вашего проекта
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [("localhost", 6379)],  # или [("your_redis_host", your_redis_port)]
+            "symmetric_encryption_keys": [SECRET_KEY],
+        },
+    },
+}

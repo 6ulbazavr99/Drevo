@@ -2,8 +2,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
-from apps.users.models import Profile
-
 
 User = get_user_model()
 
@@ -23,7 +21,11 @@ class CustomUserListSerializer(CustomUserSerializer):
 class CustomUserDetailSerializer(CustomUserSerializer):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'phone', 'avatar')
+        fields = (
+            'first_name', 'last_name', 'email', 'phone', 'avatar', 'patronymic',
+            'username', 'gender', 'birthdate', 'age', 'birthplace', 'city', 'country',
+            'marriage', 'partner', 'about_me', 'education', 'work', 'alive'
+        )
 
 
 class CustomUserRegisterSerializer(CustomUserSerializer):
@@ -33,7 +35,7 @@ class CustomUserRegisterSerializer(CustomUserSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'phone', 'password', 'password_confirmation')
+        fields = ('first_name', 'last_name', 'email', 'password', 'password_confirmation')
 
     def validate(self, attrs):
         password = attrs['password']
@@ -46,35 +48,3 @@ class CustomUserRegisterSerializer(CustomUserSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
-
-
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = '__all__'
-
-
-class ProfileRegisterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        exclude = ('user',)
-
-    def create(self, validated_data):
-        user = self.context['request'].user
-        if user.profile:
-            raise serializers.ValidationError({'rejected': 'Вы уже создали профиль'})
-        validated_data['user'] = user
-        profile = super().create(validated_data)
-        return profile
-
-
-class ProfileListSerializer(ProfileSerializer):
-    class Meta:
-        model = Profile
-        fields = ('id', 'user', 'gender')
-
-
-class ProfileDetailSerializer(ProfileSerializer):
-    class Meta:
-        model = Profile
-        exclude = ('id', )

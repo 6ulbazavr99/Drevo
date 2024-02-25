@@ -3,7 +3,6 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
 from .models import Post, Like, Comment
-from . import permissions
 from . import serializers
 
 from django.shortcuts import render
@@ -29,7 +28,7 @@ class PostViewSet(ModelViewSet):
             return serializers.PostDetailSerializer
         elif self.action == 'comments':
             return serializers.CommentCreateUpdateSerializer
-        return serializers.PostlistSerializer
+        return serializers.PostListSerializer
 
     def get_permissions(self):
         if self.action in ('create', 'like'):
@@ -37,8 +36,6 @@ class PostViewSet(ModelViewSet):
         elif self.action in ('update', 'partial_update', 'destroy'):
             return [IsAuthenticated(), IsAdmin(), IsAuthor()]
         return [AllowAny]
-
-    from rest_framework.response import Response
 
     @action(['GET'], detail=True)
     def like(self, request, pk=None, *args, **kwargs):
@@ -53,8 +50,6 @@ class PostViewSet(ModelViewSet):
         serializer = self.get_serializer(post)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
-
     @action(['GET'], detail=True)
     def get_liked_users(self, request, pk=None):
         post = self.get_object()
@@ -62,7 +57,6 @@ class PostViewSet(ModelViewSet):
 
         serializer = serializers.UserLikeSerializer(liked_users, many=True)
         return Response({"liked_users": serializer.data})
-
 
     @action(['POST', 'PATCH', 'DELETE', 'GET'], detail=True)
     def comments(self, request, pk=None, *args, **kwargs):

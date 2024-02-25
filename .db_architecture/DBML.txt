@@ -1,91 +1,96 @@
-// Family-Tree v.4
+// Family-Tree v.7
 
+Table User {  // Пользователь (CustomUser на основе AbstractUser)
+  id int  // Идентификатор пользователя
 
-Table Profile {
-  id int
+  first_name char  // Имя
+  last_name char  // Фамилия
+  email email  // Email
+  phone phonenumber  // Телефонный номер
+  avatar img  // Аватар пользователя
 
-  user int [ref: - User.id]
-
-  mother_id int [ref: < User.id]
-  father_id int [ref: < User.id]
-
-  gender choice
-  patronymic char
-  birthdate date
-  age int [note: 'auto: today - birthdate']
-
-  birthplace char
-  city char
-  country char
-
-  marriage bool
-  partner_id int [ref: - User.id]
-
-  about_me text
-  education char
-  work char
-  images img
-  alive bool
-  updated_at datetime
+  gender choice  // Пол (выбор между мужским и женским)
+  patronymic char  // Отчество
+  birthdate date  // Дата рождения
+  age int [note: 'auto: today - birthdate']  // Возраст (автоматический расчет)
+  birthplace char  // Место рождения
+  city char  // Город
+  country char  // Страна
+  marriage bool  // Семейное положение (женат/замужем)
+  partner int [ref: - User.id]  // Ссылка на партнера/партнершу (внешний ключ)
+  about_me text  // Информация о пользователе
+  education char  // Образование
+  work char  // Место работы
+  images img  // Изображения пользователя
+  alive bool  // Жив ли пользователь
+  updated_at datetime  // Дата последнего обновления профиля
 }
 
-
-
-Table User {    // CustomUser(AbstractUser)
-  id int
-
-  first_name char
-  last_name char
-
-  email email
-  phone phonenumber
-  avatar img
+Table Family {  // Семья (MPTTModel)
+  id int  // Идентификатор семьи
+  name char  // Название семьи
+  description text  // Описание семьи
+  preview img  // Изображение семьи
+  updated_at datetime  // Дата последнего обновления
+  created_at datetime  // Дата создания
+  parent id  // MPTT идентификатор семейной связи
+  members id [ref: <> User.id, note: 'through=FamilyMember'] // Члены семьи
 }
 
-
-
-// Таблица "Семья" содержит информацию о семейных отношениях и связях между пользователями.
-Table Family {
-  id int                                      // Уникальный идентификатор семьи
-  description richtext                        // Описание семьи
-  images img                                  // Изображения семьи
-  parents_id int [ref: <> User.id]            // Ссылки на профили родителей
-  children_id int [ref: <> User.id]           // Ссылки на профили детей
-  tree_id int [ref: - FamilyTree.id]          // Ссылка на дерево семьи
-  created_at datetime                         // Дата создания
-  updated_at datetime                         // Дата последнего обновления
+Table FamilyMember {  // Член семьи
+  id int  // Идентификатор
+  user int [ref: - User.id]  // Пользователь
+  family int [ref: - Family.id]  // Семья
+  role char  // Роль
 }
 
-// Таблица "Семейное дерево" содержит информацию о семейных деревьях и их ветвях.
-Table FamilyTree {
-  id int                                      // Уникальный идентификатор семейного дерева
-  description richtext                        // Описание дерева
-  images img                                  // Изображения дерева
-  address char                                // Адрес дерева
-  branches_id int [ref: <> Branch.id]         // Ссылки на ветви дерева
-  created_at datetime                         // Дата создания
-  updated_at datetime                         // Дата последнего обновления
+Table FamilyImage {  // Изображение семьи
+  id int  // Идентификатор
+  family int [ref: - Family.id]  // Семья
+  image img  // Изображение
 }
 
-// Таблица "Ветвь" содержит информацию о каждой ветви в семейном дереве.
-Table Branch {
-  id int                                      // Уникальный идентификатор ветви
-  user_id int [ref: - User.id]                // Ссылка на профиль пользователя
-  role choice                                 // Роль в ветви
-  created_at datetime                         // Дата создания
+Table Post {  // Пост
+  id int  // Идентификатор поста
+  title char  // Заголовок поста
+  body text  // Текст поста
+  user int [ref: - User.id]  // Пользователь
+  preview img  // Превью
+  created_at datetime  // Дата создания
+  updated_at datetime  // Дата обновления
 }
 
-// Таблица "Посаженное дерево" содержит информацию о каждом дереве, посаженном в семейном дереве.
-Table PlantedTree {
-  id int                                      // Уникальный идентификатор посаженного дерева
-  branch_id int [ref: - Branch.id]            // Ссылка на ветвь дерева
-  images img                                  // Изображения посаженного дерева
-  created_at datetime                         // Дата создания
+Table PostImage {  // Изображение поста
+  id int  // Идентификатор
+  title char [note: 'auto'] // Название (автоматическое)
+  post int [ref: - Post.id]  // Пост
+  image img  // Изображение
 }
 
-// Таблица "Семейный сад" содержит информацию о всех семейных деревьях.
-Table FamilyGarden {
-  id int                                      // Уникальный идентификатор семейного сада
-  trees_id int [ref: <> FamilyTree.id]        // Ссылки на семейные деревья
-  updated_at datetime                         // Дата последнего обновления
+Table Like {  // Лайк
+  id int  // Идентификатор
+  user int [ref: - User.id]  // Пользователь
+  post int [ref: - Post.id]  // Пост
+}
+
+Table Comment {  // Комментарий
+  id int  // Идентификатор
+  user int [ref: - User.id]  // Пользователь
+  post int [ref: - Post.id]  // Пост
+  body text  // Текст комментария
+  created_at datetime  // Дата создания
+}
+
+Table PlantedTree {  // Посаженного дерево
+  id int  // Идентификатор посаженного дерева
+  user int [ref: > User.id]  // Идентификатор пользователя (внешний ключ)
+
+  condition char  // Состояние посаженного дерева
+  type char  // Вид дерева
+  age int  // Возраст дерева
+  preview char  // Превью посаженного дерева (ссылка на изображение)
+  address char  // Адрес посадки дерева
+
+  created_at datetime  // Дата создания
+  updated_at datetime  // Дата обновления
 }

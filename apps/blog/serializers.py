@@ -4,12 +4,16 @@ from .models import Chat, Message
 
 from apps.blog.models import Post, PostImage, Comment
 
+
 User = get_user_model()
+
 
 class UserLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username']
+
+
 class PostImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostImage
@@ -32,11 +36,10 @@ class PostDetailSerializer(serializers.ModelSerializer):
     def get_comments_count(self, instance):
         return instance.comments.count()
 
+
 class PostCreateUpdateSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.id')
     images = PostImageSerializer(many=True, required=False)
-
-
 
     class Meta:
         model = Post
@@ -48,12 +51,10 @@ class PostCreateUpdateSerializer(serializers.ModelSerializer):
         post = Post.objects.create(**validated_data)
         for image in images:
             PostImage.objects.create(image=image, post=post)
-
         return post
 
 
-
-class PostlistSerializer(serializers.ModelSerializer):
+class PostListSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
     likes_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
@@ -75,6 +76,7 @@ class CommentCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('id', 'user', 'body')
+
 
 class CommentListSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.id')

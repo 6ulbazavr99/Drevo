@@ -24,17 +24,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env_config('SECRET_KEY')
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env_config('DEBUG', cast=bool)
+
 
 ALLOWED_HOSTS = env_config('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
-MY_APPS = ['apps.users', 'apps.blog']
+MY_APPS = ['apps.users', 'apps.family', 'apps.blog', 'apps.plant']
+
 
 THIRD_PARTY_APPS = [
     'corsheaders',
@@ -44,7 +48,10 @@ THIRD_PARTY_APPS = [
     'drf_spectacular',
     'django_rest_passwordreset',
     'channels',
+    'mptt',
+    'multiselectfield',
 ]
+
 
 INSTALLED_APPS = [
     'daphne',
@@ -56,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ] + MY_APPS + THIRD_PARTY_APPS
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -66,10 +74,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 AUTH_USER_MODEL = 'users.CustomUser'
 
-ROOT_URLCONF = 'config.urls'
 
+ROOT_URLCONF = 'config.urls'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -95,6 +105,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -109,6 +120,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -129,9 +141,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
+
 LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'Asia/Almaty'
+TIME_ZONE = 'Asia/Bishkek'
 
 USE_I18N = True
 
@@ -141,19 +154,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # Cors
 CORS_ORIGIN_ALLOW_ALL = env_config('CORS_ORIGIN_ALLOW_ALL', cast=bool)
 CORS_ALLOWED_ORIGINS = [env_config('CORS_ALLOWED_ORIGINS')]
 
+
 # PHONENUMBER DEFAULT REGION
 PHONENUMBER_DEFAULT_REGION = 'KG'
+
 
 # REST FRAMEWORK
 REST_FRAMEWORK = {
@@ -172,6 +190,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
 }
+
 
 # JWT
 SIMPLE_JWT = {
@@ -201,6 +220,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
 
+
 DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
     "CLASS": "django_rest_passwordreset.tokens.RandomStringTokenGenerator",
     "OPTIONS": {
@@ -209,13 +229,15 @@ DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
     }
 }
 
+
 # drf_spectacular config
 SPECTACULAR_SETTINGS = {
-    'TITLE': "AYAR GROUP's API",
-    'DESCRIPTION': 'AYAR GROUP',
+    'TITLE': "Family-Tree API",
+    'DESCRIPTION': 'Family-Tree',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -223,7 +245,9 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 with contextlib.suppress(ImportError):
     from .local_settings import *

@@ -1,11 +1,14 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
-from apps.users.models import Profile
-from apps.users.permissions import IsAccountOwnerOrAdmin, IsAccountOwner, IsProfileOwnerOrAdmin, IsProfileOwner
-from apps.users.serializers import CustomUserRegisterSerializer, CustomUserSerializer, CustomUserListSerializer, \
-    CustomUserDetailSerializer, ProfileListSerializer, ProfileDetailSerializer, ProfileRegisterSerializer
+from apps.users.serializers import CustomUserRegisterSerializer, CustomUserListSerializer, CustomUserDetailSerializer, \
+    CustomUserSerializer
+
+from apps.users.permissions import IsAccountOwnerOrAdmin, IsAccountOwner
+
 
 User = get_user_model()
 
@@ -31,22 +34,16 @@ class CustomUserViewSet(viewsets.ModelViewSet):
             return [AllowAny()]
         return [IsAuthenticated()]
 
+    @action(detail=True, methods=['post'])
+    def set_online(self, request, pk=None):
+        user = self.get_object()
+        user.is_online = True
+        user.save()
+        return Response({'status': 'Пользователь сейчас в сети'})
 
-class ProfileViewSet(viewsets.ModelViewSet):
-    queryset = Profile.objects.all()
-
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return ProfileListSerializer
-        elif self.action == 'create':
-            return ProfileRegisterSerializer
-        return ProfileDetailSerializer
-
-    def get_permissions(self):
-        if self.action == 'destroy':
-            return [IsProfileOwnerOrAdmin()]
-        elif self.action in ['update', 'partial_update']:
-            return [IsProfileOwner()]
-        elif self.action == 'create':
-            return [AllowAny()]
-        return [IsAuthenticated()]
+    @action(detail=True, methods=['post'])
+    def set_offline(self, request, pk=None):
+        user = self.get_object()
+        user.is_online = False
+        user.save()
+        return Response({'status': 'Пользователь сейчас не в сети'})

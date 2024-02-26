@@ -5,17 +5,15 @@ from multiselectfield import MultiSelectField
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+
 User = get_user_model()
+
 
 def validate_max_choices(value):
     max_choices = 4
     if len(value) > max_choices:
         raise ValidationError(_('Максимальное количество выбранных значений: %(max_choices)s') % {'max_choices': max_choices})
 
-class CustomMultiSelectField(MultiSelectField):
-    def _get_flatchoices(self):
-        # Возвращаем пустой список, имитируя закомментированный метод
-        return []
 
 class PlantedTree(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='planted_tree',
@@ -29,7 +27,7 @@ class PlantedTree(models.Model):
         ('medium', _('Средне')),
         ('bad', _('Плохо')),
     ]
-    condition = CustomMultiSelectField(choices=CONDITION_CHOICES, verbose_name=_("Состояние"), blank=True, null=True,
+    condition = MultiSelectField(choices=CONDITION_CHOICES, verbose_name=_("Состояние"), blank=True, null=True,
                                        validators=[validate_max_choices], default='good')
 
     type = models.CharField(max_length=255, verbose_name=_("Вид"), blank=True, null=True)

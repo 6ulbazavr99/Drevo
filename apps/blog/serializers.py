@@ -86,9 +86,6 @@ class CommentListSerializer(serializers.ModelSerializer):
         fields = ('user', 'body', 'created_at')
 
 
-
-
-
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message

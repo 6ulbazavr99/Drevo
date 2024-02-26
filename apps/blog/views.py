@@ -1,4 +1,3 @@
-
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
@@ -95,9 +94,6 @@ class PostViewSet(ModelViewSet):
             comments = Comment.objects.filter(post=post)
             serializer = serializers.CommentListSerializer(comments, many=True)
             return Response({"comments": serializer.data})
-
-
-
 
 
 class ChatListAPIView(generics.ListAPIView):

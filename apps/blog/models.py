@@ -69,24 +69,23 @@ class Comment(models.Model):
         verbose_name_plural = 'Комментарии'
 
 
-
 class Chat(models.Model):
     participants = models.ManyToManyField(
         User,
         related_name='chats',
-        verbose_name=_('Participants'),
+        verbose_name=_('Участники'),
     )
     created_at = models.DateTimeField(
-        _('Created at'),
+        _('Создано'),
         auto_now_add=True,
     )
 
     def __str__(self):
-        return f"Chat {self.id}"
+        return f"Чат {self.id}"
 
     class Meta:
-        verbose_name = _('Chat')
-        verbose_name_plural = _('Chats')
+        verbose_name = _('Чат')
+        verbose_name_plural = _('Чаты')
 
 
 class Message(models.Model):
@@ -94,24 +93,24 @@ class Message(models.Model):
         Chat,
         on_delete=models.CASCADE,
         related_name='messages',
-        verbose_name=_('Chat'),
+        verbose_name=_('Чат'),
     )
     sender = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name=_('Sender'),
+        verbose_name=_('Отправитель'),
     )
     content = models.TextField(
-        _('Content'),
+        _('Содержание'),
     )
     timestamp = models.DateTimeField(
-        _('Timestamp'),
+        _('Временная метка'),
         auto_now_add=True,
     )
 
     def __str__(self):
-        return f"Message from {self.sender} in {self.chat}"
+        return f"Сообщение от {self.sender} в {self.chat}"
 
     class Meta:
-        verbose_name = _('Message')
-        verbose_name_plural = _('Messages')
+        verbose_name = _('Сообщение')
+        verbose_name_plural = _('Сообщения')

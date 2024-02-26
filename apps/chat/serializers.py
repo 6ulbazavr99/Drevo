@@ -1,10 +1,11 @@
 from rest_framework import serializers
 
-from apps.chat.models import Message, Chat
+from .models import Chat
 
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
+        from apps.chat.models import Message  # Moved inside Meta
         model = Message
         fields = (
             'id',
@@ -14,11 +15,11 @@ class MessageSerializer(serializers.ModelSerializer):
             'timestamp',
         )
 
-
 class ChatSerializer(serializers.ModelSerializer):
     participants = serializers.SlugRelatedField(many=True, read_only=True, slug_field='id',)
 
     class Meta:
+        from apps.chat.models import Chat  # Moved inside Meta
         model = Chat
         fields = (
             'id',
@@ -27,7 +28,6 @@ class ChatSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('id',)
         depth = 1
-
 
 class ChatDetailSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True, read_only=True)

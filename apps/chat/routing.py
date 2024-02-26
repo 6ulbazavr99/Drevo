@@ -5,7 +5,7 @@ from apps.chat.consumers import ChatConsumer
 
 
 websocket_urlpatterns = [
-    re_path(r'ws/chat/(?P<room_id>\d+)/$', ChatConsumer.as_asgi()),
+    re_path(r'api/v1/chat/room/(?P<room_id>\d+)/$', ChatConsumer.as_asgi()),
 ]
 
 application = ProtocolTypeRouter({

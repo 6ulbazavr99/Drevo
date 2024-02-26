@@ -1,6 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 
 # Create your models here.
 User = get_user_model()
@@ -49,3 +53,6 @@ class Message(models.Model):
     class Meta:
         verbose_name = _('Сообщение')
         verbose_name_plural = _('Сообщения')
+
+
+

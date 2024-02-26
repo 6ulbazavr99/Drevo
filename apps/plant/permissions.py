@@ -12,6 +12,7 @@ class IsMember(BasePermission):
     def has_permission(self, request, view):
         if request.user.family_members.all():
             return True
+        # TODO: добавить ограничение по кол-ву живых древ
         return False
 
     def has_object_permission(self, request, view, obj):

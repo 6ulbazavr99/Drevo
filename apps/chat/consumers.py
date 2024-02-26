@@ -5,7 +5,6 @@ from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.auth import get_user
 
-from .models import Message, Chat
 
 
 class ChatConsumer(AsyncWebsocketConsumer):

@@ -15,6 +15,7 @@ class MessageSerializer(serializers.ModelSerializer):
             'timestamp',
         )
 
+
 class ChatSerializer(serializers.ModelSerializer):
     participants = serializers.SlugRelatedField(many=True, read_only=True, slug_field='id',)
 
@@ -28,6 +29,7 @@ class ChatSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('id',)
         depth = 1
+
 
 class ChatDetailSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True, read_only=True)

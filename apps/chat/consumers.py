@@ -1,12 +1,8 @@
 import json
-from datetime import datetime
-
-from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
-from channels.auth import get_user
-
-from apps.chat.models import Chat, Message
-
+# from django.db.models import sync_to_async
+from django.db.models.functions import sync_to_async
+from apps.chat.models import Message
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -32,6 +28,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        user = self.scope["user"]
+        room_id = self.room_id
+
+        # Сохранение сообщения в базу данных
+        await self.save_message(room_id, user, message)
 
         # Отправка сообщения всем участникам группы
         await self.channel_layer.group_send(
@@ -49,3 +50,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': message
         }))
+
+    @sync_to_async
+    def save_message(self, room_id, user, message_text):
+        Message.objects.create(
+            chat_id=room_id,
+            sender=user,
+            content=message_text
+        )

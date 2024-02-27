@@ -252,7 +252,7 @@ with contextlib.suppress(ImportError):
 
 
 CHANNEL_REDIS_HOST = [("localhost", 6379)]
-ASGI_APPLICATION = 'config.asgi.application'  # Замените 'myproject' на имя вашего проекта
+ASGI_APPLICATION = 'config.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {

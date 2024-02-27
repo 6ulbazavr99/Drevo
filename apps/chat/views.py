@@ -3,9 +3,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
-from apps.blog import permissions
 from apps.chat.serializers import ChatDetailSerializer
 from apps.chat.models import Chat
 from apps.chat.serializers import ChatSerializer
@@ -37,6 +35,7 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
             raise PermissionDenied("Вы не участник этого чата.")
 
         return chat
+
 
 def chat_room(request, room_id):
     return render(request, 'chat_room.html', {'room_id': room_id})

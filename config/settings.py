@@ -38,7 +38,7 @@ ALLOWED_HOSTS = env_config('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
-MY_APPS = ['apps.users', 'apps.family', 'apps.blog', 'apps.plant']
+MY_APPS = ['apps.users', 'apps.family', 'apps.blog', 'apps.plant', 'apps.chat']
 
 
 THIRD_PARTY_APPS = [

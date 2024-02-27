@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from apps.users.serializers import CustomUserRegisterSerializer, CustomUserListSerializer, CustomUserDetailSerializer, \
@@ -32,7 +32,9 @@ class CustomUserViewSet(viewsets.ModelViewSet):
             return [IsAccountOwner()]
         elif self.action == 'create':
             return [AllowAny()]
-        return [IsAuthenticated()]
+        elif self.action in ('list', 'retrieve', 'profile', 'set_online', 'set_offline'):
+            return [IsAuthenticated()]
+        return [IsAdminUser()]
 
     @action(['GET'], detail=False)
     def profile(self, request):

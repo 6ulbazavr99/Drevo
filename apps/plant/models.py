@@ -16,14 +16,14 @@ def validate_max_choices(value):
 
 
 class PlantedTree(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='planted_trees',
-                             verbose_name=_("Пользователь"), blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='planted_tree',
+                                verbose_name=_("Пользователь"))
 
     CONDITION_CHOICES = [
         ('good', _('Хорошо')),
         ('medium', _('Средне')),
         ('bad', _('Плохо')),
-        ('terrible', _('Ужасное')),
+        ('terrible', _('Ужасно')),
     ]
 
     NEEDS_CHOICES = [

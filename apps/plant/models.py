@@ -1,9 +1,8 @@
-from django.contrib.auth import get_user_model
-from apps.family.models import FamilyMember
 from django.db import models
-from multiselectfield import MultiSelectField
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import get_user_model
+from multiselectfield import MultiSelectField
 
 
 User = get_user_model()
@@ -17,19 +16,26 @@ def validate_max_choices(value):
 
 
 class PlantedTree(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='planted_tree',
-                             verbose_name=_("Пользователь"))
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='planted_tree',
+                                verbose_name=_("Пользователь"))
 
     CONDITION_CHOICES = [
-        ('watering', _('Требуется полить')),
-        ('pruning', _('Требуется обрезка')),
-        ('fertilizing', _('Требуется подкормка')),
         ('good', _('Хорошо')),
         ('medium', _('Средне')),
         ('bad', _('Плохо')),
+        ('terrible', _('Ужасно')),
     ]
-    condition = MultiSelectField(choices=CONDITION_CHOICES, verbose_name=_("Состояние"), blank=True, null=True,
-                                       validators=[validate_max_choices], default='good')
+
+    NEEDS_CHOICES = [
+        ('watering', _('Требуется полить')),
+        ('pruning', _('Требуется обрезка')),
+        ('fertilizing', _('Требуется подкормка')),
+    ]
+
+    condition = models.CharField(max_length=10, choices=CONDITION_CHOICES, verbose_name=_("Состояние"),
+                                 default='good')
+    needs = MultiSelectField(choices=NEEDS_CHOICES, verbose_name=_("Потребности"), blank=True,
+                             validators=[validate_max_choices])
 
     type = models.CharField(max_length=255, verbose_name=_("Вид"), blank=True, null=True)
     age = models.IntegerField(_('Возраст'), blank=True, null=True)
@@ -40,9 +46,7 @@ class PlantedTree(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Создано"))
 
     def __str__(self):
-        if self.user:
-            return f'{self.user}'
-        return f'Посаженное дерево №{self.id}'
+        return f'Посаженное дерево №{self.id} [{self.user}]' if self.user else f'Посаженное дерево №{self.id}'
 
     class Meta:
         verbose_name = _("Посаженное дерево")

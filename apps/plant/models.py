@@ -20,10 +20,10 @@ class PlantedTree(models.Model):
                                 verbose_name=_("Пользователь"))
 
     CONDITION_CHOICES = [
-        ('good', _('Хорошо')),
-        ('medium', _('Средне')),
-        ('bad', _('Плохо')),
-        ('terrible', _('Ужасно')),
+        ('good', _('Хорошое')),
+        ('medium', _('Среднее')),
+        ('bad', _('Плохое')),
+        ('terrible', _('Ужасное')),
     ]
 
     NEEDS_CHOICES = [

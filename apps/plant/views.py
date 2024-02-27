@@ -54,6 +54,8 @@ class PlantedTreeViewSet(viewsets.ModelViewSet):
 
 
 class IdentifyPlantView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
         plant_id_api_key = config('PLANTID')
         openai_api_key = config('OPENAI')
@@ -72,23 +74,54 @@ class IdentifyPlantView(APIView):
         }
 
         response = requests.post(plant_id_url, headers=headers, data=json.dumps(data))
-        if response.status_code == 200:
-            response_data = response.json()
-            plant_names = [suggestion['plant_name'] for suggestion in response_data.get('suggestions', [])]
+        if response.status_code != 200:
+            return Response({"error": "Ошибка при запросе к базе данных"}, status=response.status_code)
 
-            if plant_names:
-                plant_name = plant_names[0]
-                openai.api_key = openai_api_key
-                gpt_response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": "Вы — помощник, обладающий знаниями о растениях."},
-                        {"role": "user", "content": f"Расскажите мне о растении {plant_name}."}
-                    ]
-                )
-                description = gpt_response.choices[0].message['content']
-                return Response({"plant_name": plant_name, "description": description}, status=status.HTTP_200_OK)
-            else:
-                return Response({"error": "Растение не найдено."}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            return Response({"error": "Ошибка при запросе к Plant.id"}, status=response.status_code)
+        response_data = response.json()
+
+        ban_list = ['ficus', 'fungi', 'фикус', 'грибы', 'mushroom', 'insect', 'насекомое', 'dracaena',
+                    'mammillaria', 'elongata', 'cymbopogon']
+
+        ban_list = [x.lower() for x in ban_list]
+        plant_names = [suggestion['plant_name'] for suggestion in response_data.get('suggestions', [])
+                       if all(banned not in suggestion['plant_name'].lower() for banned in ban_list)]
+
+        if not plant_names:
+            return Response({"error": "В переданной фотографии не удалось определить дерево"},
+                            status=status.HTTP_404_NOT_FOUND)
+
+        plant_name = plant_names[0]
+        openai.api_key = openai_api_key
+        description_response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Опиши подробно растение, учитывая его "
+                                              "особенности и возможное использование."},
+                {"role": "user", "content": f"Что такое {plant_name}?"}
+            ]
+        )
+
+        description = description_response.choices[0].message['content'].strip()
+
+        if any(banned in description.lower() for banned in ban_list):
+            return Response({"error": "В переданной фотографии не удалось определить дерево"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        tree_check_response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Определи, является ли следующее описание характеристикой дерева."},
+                {"role": "user", "content": f"Вот описание: {description}. Является ли это описание деревом?"}
+            ]
+        )
+
+        tree_check = tree_check_response.choices[0].message['content'].strip()
+
+        is_tree = "да" in tree_check.lower()
+
+        if not is_tree:
+            return Response({"error": "В переданной фотографии не удалось определить дерево"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"plant_name": plant_name, "description": description, "is_tree": is_tree},
+                        status=status.HTTP_200_OK)

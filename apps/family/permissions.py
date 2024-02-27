@@ -2,14 +2,14 @@ from django.db.models import Q
 from rest_framework.permissions import BasePermission
 
 
-class IsFamilyMember(BasePermission):
+class IsFamilyMemberOrAdmin(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
             return True
         return request.user in obj.members.all()
 
 
-class IsFamilyParentMember(BasePermission):
+class IsParentsMemberOrAdmin(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
             return True

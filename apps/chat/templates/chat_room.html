@@ -11,7 +11,7 @@
 
     <script>
     const chatSocket = new WebSocket(
-        'ws://127.0.0.1:8000/api/v1/chat/room/{{ room_id }}/'
+        'ws://127.0.0.1:8000/api/v1/chat/room/{{ room_id }}/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzEwMzg4MDA2LCJpYXQiOjE3MDkwOTIwMDYsImp0aSI6IjIzZDE2NGI0Y2NmZTQ0N2ZiNzk3NzcwYThhYzc1MWY0IiwidXNlcl9pZCI6Mn0.wN_ZJhm3pCX-sJep46ErWXtHt5ltqB0aizB4vx6TTT4'
     );
 
     chatSocket.onmessage = function(e) {

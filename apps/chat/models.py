@@ -1,30 +1,27 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from django.contrib.auth import get_user_model
 
-
-# Create your models here.
 User = get_user_model()
+
+
 class Chat(models.Model):
     participants = models.ManyToManyField(
         User,
         related_name='chats',
-        verbose_name=_('Участники'),
+        verbose_name=_('Participants'),
     )
     created_at = models.DateTimeField(
-        _('Создано'),
+        _('Created at'),
         auto_now_add=True,
     )
 
     def __str__(self):
-        return f"Чат {self.id}"
+        return f"Chat {self.id}"
 
     class Meta:
-        verbose_name = _('Чат')
-        verbose_name_plural = _('Чаты')
+        verbose_name = _('Chat')
+        verbose_name_plural = _('Chats')
 
 
 class Message(models.Model):
@@ -32,27 +29,24 @@ class Message(models.Model):
         Chat,
         on_delete=models.CASCADE,
         related_name='messages',
-        verbose_name=_('Чат'),
+        verbose_name=_('Chat'),
     )
     sender = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name=_('Отправитель'),
+        verbose_name=_('Sender'),
     )
     content = models.TextField(
-        _('Содержание'),
+        _('Content'),
     )
     timestamp = models.DateTimeField(
-        _('Временная метка'),
+        _('Timestamp'),
         auto_now_add=True,
     )
 
     def __str__(self):
-        return f"Сообщение от {self.sender} в {self.chat}"
+        return f"Message from {self.sender} in {self.chat}"
 
     class Meta:
-        verbose_name = _('Сообщение')
-        verbose_name_plural = _('Сообщения')
-
-
-
+        verbose_name = _('Message')
+        verbose_name_plural = _('Messages')

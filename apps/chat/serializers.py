@@ -1,11 +1,11 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .models import Chat
-
+from .models import Chat, Message
+User = get_user_model()
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
-        from apps.chat.models import Message  # Moved inside Meta
         model = Message
         fields = (
             'id',
@@ -15,11 +15,11 @@ class MessageSerializer(serializers.ModelSerializer):
             'timestamp',
         )
 
+
 class ChatSerializer(serializers.ModelSerializer):
     participants = serializers.SlugRelatedField(many=True, read_only=True, slug_field='id',)
 
     class Meta:
-        from apps.chat.models import Chat  # Moved inside Meta
         model = Chat
         fields = (
             'id',
@@ -28,6 +28,7 @@ class ChatSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('id',)
         depth = 1
+
 
 class ChatDetailSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True, read_only=True)
@@ -43,3 +44,11 @@ class ChatDetailSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('id',)
         depth = 1
+
+class ChatCreateSerializer(serializers.ModelSerializer):
+    participants = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True)
+
+    class Meta:
+        model = Chat
+        fields = ('participants',)
+

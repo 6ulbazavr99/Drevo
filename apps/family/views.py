@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets, permissions
+from rest_framework.permissions import IsAuthenticated
 
 from apps.family.models import Family, FamilyImage, FamilyMember
-from apps.family.permissions import IsFamilyMember, IsFamilyParentMember
+from apps.family.permissions import IsFamilyMemberOrAdmin, IsParentsMemberOrAdmin
 from apps.family.serializers import FamilySerializer, FamilyImageSerializer, FamilyMemberSerializer, \
     FamilyDetailSerializer, FamilyListSerializer, FamilyRegisterSerializer, RecursiveFamilySerializer
 
@@ -18,7 +19,7 @@ User = get_user_model()
 class FamilyViewSet(viewsets.ModelViewSet):
     queryset = Family.objects.all()
     serializer_class = FamilySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -31,10 +32,10 @@ class FamilyViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ('my_tree', 'family_tree', 'father_tree', 'mother_tree', 'family_planted_trees'):
-            return [IsFamilyMember()]
+            return [IsFamilyMemberOrAdmin()]
         elif self.action in ('destroy', 'update', 'partial_update'):
-            return [IsFamilyParentMember()]
-        return super(FamilyViewSet, self).get_permissions()
+            return [IsParentsMemberOrAdmin()]
+        return super().get_permissions()
 
     def perform_create(self, serializer):
         family = serializer.save()

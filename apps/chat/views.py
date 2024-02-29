@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import render
 
-from rest_framework import generics, permissions, status, mixins
+from rest_framework import permissions, status, mixins
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError, PermissionDenied, NotFound
+from rest_framework.exceptions import PermissionDenied, NotFound
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -12,7 +12,9 @@ from .models import Chat
 from .permissions import IsChatParticipant
 from .serializers import ChatSerializer, ChatDetailSerializer, ChatCreateSerializer
 
+
 User = get_user_model()
+
 
 class ChatViewSet(mixins.ListModelMixin, GenericViewSet):
 

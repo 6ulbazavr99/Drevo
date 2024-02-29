@@ -1,5 +1,6 @@
 from rest_framework import permissions
 
+
 class IsChatParticipant(permissions.BasePermission):
     """
     Разрешение на проверку, является ли пользователь участником чата.

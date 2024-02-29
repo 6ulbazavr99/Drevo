@@ -4,6 +4,7 @@ from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
 from .models import Chat, Message
 
+
 User = get_user_model()
 
 

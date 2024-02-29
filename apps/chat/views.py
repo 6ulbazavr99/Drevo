@@ -34,8 +34,6 @@ class ChatViewSet(mixins.ListModelMixin, GenericViewSet):
             return [permissions.IsAuthenticated()]
         return [IsChatParticipant()]
 
-
-
     @action(methods=['get'], detail=True)
     def retrieve(self, request, *args, **kwargs):
         instance = get_object_or_404(Chat, pk=self.kwargs['pk'])
@@ -47,8 +45,6 @@ class ChatViewSet(mixins.ListModelMixin, GenericViewSet):
         else:
             return Response({"message": "You are not a participant of this chat."},
                             status=status.HTTP_403_FORBIDDEN)
-
-
 
     @action(methods=['post'], detail=False)
     def create_chat(self, request, *args, **kwargs):
@@ -65,8 +61,6 @@ class ChatViewSet(mixins.ListModelMixin, GenericViewSet):
             return Response(serializer.data, status=201)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': 'Participants required'})
-
-    from rest_framework.exceptions import NotFound, PermissionDenied
 
     @action(methods=['post'], detail=True)
     def update_chat(self, request, *args, **kwargs):
@@ -91,26 +85,6 @@ class ChatViewSet(mixins.ListModelMixin, GenericViewSet):
         chat.save()
         serializer = ChatDetailSerializer(chat, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-        # Проверяем, является ли пользователь участником чата
-        # if not chat.participants.filter(id=user.id).exists():
-        #     raise PermissionDenied({"message": "You are not a participant of this chat."})
-        #
-        # # Получаем список ID участников, которых нужно добавить
-        # participant_ids = request.data.get('participants', [])
-        # if not participant_ids:
-        #     return Response({"message": "No participants provided"}, status=status.HTTP_400_BAD_REQUEST)
-        #
-        # # Проверяем, что все предоставленные ID относятся к существующим пользователям
-        # new_participants = User.objects.filter(id__in=participant_ids)
-        # if not new_participants.exists():
-        #     return Response({"message": "One or more users do not exist"}, status=status.HTTP_404_NOT_FOUND)
-        #
-        # # Добавляем новых участников в чат
-        # chat.participants.add(*new_participants)
-        # chat.save()
-        #
-        # return Response({"message": "Participants added successfully"}, status=status.HTTP_200_OK)
 
 
 def chat_room(request, room_id):

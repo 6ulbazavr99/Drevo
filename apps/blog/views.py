@@ -4,9 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from .models import Post, Like, Comment
 from . import serializers
 
-from django.shortcuts import render
-
-from rest_framework import generics, permissions, status
+from rest_framework import status
 from rest_framework.response import Response
 
 from .permissions import IsAdmin, IsAuthor

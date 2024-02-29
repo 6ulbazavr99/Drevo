@@ -1,15 +1,13 @@
-# Используйте официальный образ Python как базовый
-FROM python:3.9
+FROM python:3.12
 
-# Установите рабочий каталог в контейнере
+ENV PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
-# Скопируйте файл зависимостей и установите зависимости
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
 
-# Скопируйте остальную часть исходного кода проекта
-COPY . .
+COPY nginx/nginx.conf /etc/nginx/conf.d/
 
-# Команда для запуска приложения
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+COPY . /app/

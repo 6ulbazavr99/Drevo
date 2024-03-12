@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Чат</title>
+</head>
+<body>
+    <div id="chat-messages"></div>
+    <input type="text" id="chat-input" placeholder="Введите сообщение...">
+    <button id="send-button">Отправить</button>
+
+    <script>
+    const chatSocket = new WebSocket(
+        'ws://127.0.0.1:8000/api/v1/chat/room/{{ room_id }}/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzEwMzg4MDA2LCJpYXQiOjE3MDkwOTIwMDYsImp0aSI6IjIzZDE2NGI0Y2NmZTQ0N2ZiNzk3NzcwYThhYzc1MWY0IiwidXNlcl9pZCI6Mn0.wN_ZJhm3pCX-sJep46ErWXtHt5ltqB0aizB4vx6TTT4'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const message = data.message;
+        const sender_id = data.sender_id;
+        const timestamp = data.timestamp;
+
+        // Отображение сообщения на странице
+        const messageElement = document.createElement('p');
+        messageElement.innerHTML = `${sender_id} (${timestamp}): ${message}`;
+        document.querySelector('#chat-messages').appendChild(messageElement);
+    };
+
+    document.querySelector('#send-button').onclick = function() {
+        const messageInputDom = document.querySelector('#chat-input');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({'message': message}));
+        messageInputDom.value = '';
+    };
+</script>
+</body>
+</html>

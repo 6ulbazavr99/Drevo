@@ -43,6 +43,8 @@ api_v1_patterns = [
 
 
     path('posts/', include('apps.blog.urls')),
+
+    path('chat/', include('apps.chat.urls')),
     path('', include('apps.users.urls')),
     path('', include('apps.family.urls')),
     path('', include('apps.plant.urls')),

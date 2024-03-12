@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 import contextlib
+import socket
 
 from datetime import timedelta
 from pathlib import Path
@@ -37,7 +38,7 @@ ALLOWED_HOSTS = env_config('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
-MY_APPS = ['apps.users', 'apps.family', 'apps.blog', 'apps.plant']
+MY_APPS = ['apps.users', 'apps.family', 'apps.blog', 'apps.plant', 'apps.chat']
 
 
 THIRD_PARTY_APPS = [
@@ -250,7 +251,6 @@ with contextlib.suppress(ImportError):
     from .local_settings import *
 
 
-
 CHANNEL_REDIS_HOST = [("localhost", 6379)]
 ASGI_APPLICATION = 'config.asgi.application'  # Замените 'myproject' на имя вашего проекта
 
@@ -263,3 +263,10 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = env_config('EMAIL_USER')
+EMAIL_HOST_PASSWORD = env_config('EMAIL_PASSWORD')

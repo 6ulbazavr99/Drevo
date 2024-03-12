@@ -4,8 +4,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from apps.users.serializers import CustomUserRegisterSerializer, CustomUserListSerializer, CustomUserDetailSerializer, \
-    CustomUserSerializer
+from apps.users.serializers import (CustomUserRegisterSerializer, CustomUserListSerializer,
+                                    CustomUserDetailSerializer, CustomUserSerializer)
 
 from apps.users.permissions import IsAccountOwnerOrAdmin, IsAccountOwner
 
@@ -15,6 +15,7 @@ User = get_user_model()
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -32,6 +33,8 @@ class CustomUserViewSet(viewsets.ModelViewSet):
             return [IsAccountOwner()]
         elif self.action == 'create':
             return [AllowAny()]
+        elif self.action in ('set_online', 'set_offline'):
+            return [IsAccountOwner()]
         return [IsAuthenticated()]
 
     @action(['GET'], detail=False)
